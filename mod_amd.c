@@ -331,7 +331,7 @@ static switch_bool_t amd_handle_voiced_frame(amd_vad_t *vad, const switch_frame_
 static void amd_fire_event(switch_channel_t *channel) {
     switch_event_t      *event;
     switch_status_t     status;
-    status = switch_event_create_subclass(&event, SWITCH_EVENT_CLONE, AMD_EVENT_NAME);
+    status = switch_event_create_subclass(&event, SWITCH_EVENT_CUSTOM, AMD_EVENT_NAME);
     if (status != SWITCH_STATUS_SUCCESS) {
         return;
     }
@@ -394,6 +394,7 @@ static switch_bool_t amd_read_audio_callback(switch_media_bug_t *bug, void *user
         {
             if (switch_channel_ready(vad->channel)) {
                 const char *result = NULL;
+                switch_channel_set_variable(vad->channel, "amd_result_microtime", switch_mprintf( "%" SWITCH_TIME_T_FMT, switch_micro_time_now( ) ));
                 switch_channel_set_variable(vad->channel, "amd_result_epoch", switch_mprintf( "%" SWITCH_TIME_T_FMT, switch_micro_time_now( ) / 1000000 ));
 
                 result = switch_channel_get_variable(vad->channel, "amd_result");
